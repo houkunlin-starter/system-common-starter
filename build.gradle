@@ -26,6 +26,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-joda'
+    testCompileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-joda'
     compileOnly 'org.springframework.boot:spring-boot-starter-security'
 
     api 'org.apache.commons:commons-lang3:+'
