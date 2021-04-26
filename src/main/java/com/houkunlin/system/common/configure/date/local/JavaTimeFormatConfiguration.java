@@ -1,12 +1,16 @@
 package com.houkunlin.system.common.configure.date.local;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -16,8 +20,10 @@ import java.util.List;
  *
  * @author HouKunLin
  */
+@ConditionalOnProperty(prefix = "system.common.date", name = "local.enable", matchIfMissing = true)
 @Configuration
 public class JavaTimeFormatConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(JavaTimeFormatConfiguration.class);
     /**
      * Date格式化字符串
      */
@@ -82,5 +88,10 @@ public class JavaTimeFormatConfiguration {
                                          @Qualifier("dateDateTimeFormatter") DateTimeFormatter dateDateTimeFormatter,
                                          @Qualifier("timeDateTimeFormatter") DateTimeFormatter timeDateTimeFormatter) {
         return new JavaTimeModule(dateTimeDateTimeFormatter, dateDateTimeFormatter, timeDateTimeFormatter);
+    }
+
+    @PostConstruct
+    public void post() {
+        logger.debug("自动配置本地日期对象转换配置");
     }
 }

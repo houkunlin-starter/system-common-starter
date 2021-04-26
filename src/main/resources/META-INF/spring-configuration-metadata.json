@@ -1,0 +1,16 @@
+{
+  "properties": [
+    {
+      "name": "system.common.date.local.enable",
+      "defaultValue": true,
+      "description": "是否启用本地日期对象转换配置，默认：true",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "name": "system.common.date.joda.enable",
+      "defaultValue": true,
+      "description": "是否启用 joda 日期对象转换配置，默认：true",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}

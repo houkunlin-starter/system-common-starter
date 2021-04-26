@@ -3,14 +3,18 @@ package com.houkunlin.system.common.configure.date.joda;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 
@@ -19,9 +23,11 @@ import java.util.List;
  *
  * @author HouKunLin
  */
+@ConditionalOnProperty(prefix = "system.common.date", name = "joda.enable", matchIfMissing = true)
 @Configuration
 @ConditionalOnClass(JodaModule.class)
 public class JodaTimeFormatConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(JodaTimeFormatConfiguration.class);
     /**
      * Date格式化字符串
      */
@@ -81,5 +87,10 @@ public class JodaTimeFormatConfiguration {
             @Qualifier("dateJodaDateTimeFormatter") DateTimeFormatter dateJodaDateTimeFormatter,
             @Qualifier("timeJodaDateTimeFormatter") DateTimeFormatter timeJodaDateTimeFormatter) {
         return new JodaTimeModule(dateTimeJodaDateTimeFormatter, dateJodaDateTimeFormatter, timeJodaDateTimeFormatter);
+    }
+
+    @PostConstruct
+    public void post() {
+        logger.debug("自动配置 joda 日期对象转换配置");
     }
 }
