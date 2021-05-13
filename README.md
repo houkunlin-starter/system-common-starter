@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/houkunlin/system-common-starter.svg)](https://jitpack.io/#houkunlin/system-common-starter)
+
 # 系统公共配置 Starter
 
 
@@ -29,4 +31,3 @@
   - `public static String getRequestIp()`
   - `public static String getRequestIp(HttpServletRequest request)`
 - `com.houkunlin.system.common.MessageWrapper` 返回前端消息包裹器对象
-
