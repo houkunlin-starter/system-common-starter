@@ -4,6 +4,8 @@ import com.houkunlin.system.common.MessageWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  *
  * @author HouKunLin
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 @ConditionalOnClass(value = {AccessDeniedException.class, AuthenticationException.class})
 public class GlobalRestSecurityExceptionHandler {
