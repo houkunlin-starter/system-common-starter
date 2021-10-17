@@ -11,6 +11,12 @@
       "defaultValue": true,
       "description": "是否启用 joda 日期对象转换配置，默认：true",
       "type": "java.lang.Boolean"
+    },
+    {
+      "name": "system.common.error.to-json",
+      "defaultValue": true,
+      "description": "是否对 ErrorController 的异常输出 json 格式信息，默认：true",
+      "type": "java.lang.Boolean"
     }
   ]
 }
