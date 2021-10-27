@@ -17,6 +17,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class GlobalRestControllerExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public MessageWrapper exception(Throwable e) {
         logger.error("严重错误，从未考虑到的错误范围", e);
-        return new MessageWrapper(DEFAULT_ERROR_CODE_500, DEFAULT_ERROR_MSG, e.getMessage());
+        return new MessageWrapper(DEFAULT_ERROR_CODE_500, DEFAULT_ERROR_MSG, Collections.singletonList(e.getMessage()));
     }
 
     /**
@@ -60,7 +61,7 @@ public class GlobalRestControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Object exception(Exception e) {
         logger.error("严重错误，未捕获的其他异常", e);
-        return new MessageWrapper(DEFAULT_ERROR_CODE_500, DEFAULT_ERROR_MSG, e.getMessage());
+        return new MessageWrapper(DEFAULT_ERROR_CODE_500, DEFAULT_ERROR_MSG, Collections.singletonList(e.getMessage()));
     }
 
     /**
@@ -73,7 +74,7 @@ public class GlobalRestControllerExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public Object businessException(BusinessException e) {
         logger.error("业务异常", e);
-        return new MessageWrapper(e.getErrorCode(), e.getMessage());
+        return new MessageWrapper(e.getErrorCode(), "业务错误", Collections.singletonList(e.getMessage()));
     }
 
     /**
@@ -99,7 +100,7 @@ public class GlobalRestControllerExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public Object nullPointerException(NullPointerException e) {
         logger.error("空指针错误", e);
-        return new MessageWrapper(DEFAULT_ERROR_CODE_500, DEFAULT_ERROR_MSG, "空指针错误");
+        return new MessageWrapper(DEFAULT_ERROR_CODE_500, DEFAULT_ERROR_MSG, Collections.singletonList("空指针错误"));
     }
 
     /**
@@ -121,7 +122,7 @@ public class GlobalRestControllerExceptionHandler {
             String supportedMethods = supportedHttpMethods.stream().map(Enum::name).collect(Collectors.joining("/"));
             message.add(String.format("该URI可能支持 %s 请求", supportedMethods));
         }
-        return new MessageWrapper("B" + HttpStatus.METHOD_NOT_ALLOWED.value(), "HTTP 请求方法不支持", String.join(", ", message));
+        return new MessageWrapper("B" + HttpStatus.METHOD_NOT_ALLOWED.value(), "HTTP 请求方法不支持", message);
     }
 
     /**
@@ -135,7 +136,7 @@ public class GlobalRestControllerExceptionHandler {
     @ExceptionHandler({NoHandlerFoundException.class})
     public Object noHandlerFoundException(NoHandlerFoundException e) {
         logger.error("404错误", e);
-        return new MessageWrapper("B" + HttpStatus.NOT_FOUND.value(), "找不到请求资源", e.getMessage());
+        return new MessageWrapper("B" + HttpStatus.NOT_FOUND.value(), "找不到请求资源", Collections.singletonList(e.getMessage()));
     }
 
     /**
@@ -149,7 +150,7 @@ public class GlobalRestControllerExceptionHandler {
     public Object httpMessageNotReadableException(HttpMessageNotReadableException e) {
         logger.error("数据类型转换错误: {}", e.getLocalizedMessage());
         logger.error("数据类型转换错误", e);
-        return new MessageWrapper(DEFAULT_ERROR_CODE_500, "数据类型转换错误", e.getMessage());
+        return new MessageWrapper(DEFAULT_ERROR_CODE_500, "数据类型转换错误", Collections.singleton(e.getMessage()));
     }
 
     /**

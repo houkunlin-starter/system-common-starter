@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Collections;
+
 /**
  * 捕获 Spring Security 的异常
  *
@@ -34,7 +36,7 @@ public class GlobalRestSecurityExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public Object authenticationException(AuthenticationException e) {
         logger.error("权限相关错误", e);
-        return new MessageWrapper("B" + HttpStatus.UNAUTHORIZED.value(), "权限认证错误，未授权", e.getMessage());
+        return new MessageWrapper("B" + HttpStatus.UNAUTHORIZED.value(), "权限认证错误，未授权", Collections.singletonList(e.getMessage()));
     }
 
     /**
@@ -47,6 +49,6 @@ public class GlobalRestSecurityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public Object authenticationException(AccessDeniedException e) {
         logger.error("拒绝访问异常", e);
-        return new MessageWrapper("B" + HttpStatus.FORBIDDEN.value(), "权限认证错误，拒绝访问资源", e.getMessage());
+        return new MessageWrapper("B" + HttpStatus.FORBIDDEN.value(), "权限认证错误，拒绝访问资源", Collections.singletonList(e.getMessage()));
     }
 }
