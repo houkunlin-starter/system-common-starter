@@ -1,5 +1,6 @@
 package com.houkunlin.system.common.exception;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.houkunlin.system.common.MessageWrapper;
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
@@ -7,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -74,7 +76,7 @@ public class GlobalRestControllerExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public Object businessException(BusinessException e) {
         logger.error("业务异常", e);
-        return new MessageWrapper(e.getErrorCode(), "业务错误", Collections.singletonList(e.getMessage()));
+        return new MessageWrapper(e.getErrorCode(), e.getTitle(), e.getMessages());
     }
 
     /**
@@ -145,12 +147,25 @@ public class GlobalRestControllerExceptionHandler {
      * @param e 错误
      * @return json
      */
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public Object httpMessageNotReadableException(HttpMessageNotReadableException e) {
         logger.error("数据类型转换错误: {}", e.getLocalizedMessage());
         logger.error("数据类型转换错误", e);
-        return new MessageWrapper(DEFAULT_ERROR_CODE_500, "数据类型转换错误", Collections.singleton(e.getMessage()));
+        final Throwable cause = e.getCause();
+        if (cause instanceof JsonMappingException) {
+            // 自定义JSON反序列化器时，如果遇到解析异常则会执行到这里
+            final HttpStatus status = HttpStatus.BAD_REQUEST;
+            final Throwable throwable = cause.getCause();
+            if (throwable instanceof BusinessException) {
+                final BusinessException businessException = (BusinessException) throwable;
+                final MessageWrapper wrapper = new MessageWrapper(businessException.getErrorCode(), businessException.getTitle(), businessException.getMessages());
+                return new ResponseEntity<>(wrapper, status);
+            }
+            final MessageWrapper wrapper = new MessageWrapper("A" + status.value(), "数据类型转换错误", Collections.singleton(e.getMessage()));
+            return new ResponseEntity<>(wrapper, status);
+        }
+        final MessageWrapper wrapper = new MessageWrapper(DEFAULT_ERROR_CODE_500, "数据类型转换错误", Collections.singleton(e.getMessage()));
+        return new ResponseEntity<>(wrapper, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
