@@ -97,4 +97,25 @@ public class BusinessException extends RuntimeException {
         this.title = title;
         this.messages = Arrays.asList(messages);
     }
+
+    public BusinessException(final String title, final List<String> messages) {
+        super(title);
+        this.errorCode = MessageWrapper.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
+        this.title = title;
+        this.messages = messages;
+    }
+
+    public BusinessException(final String errorCode, final String title, final List<String> messages) {
+        super(title);
+        this.errorCode = errorCode;
+        this.title = title;
+        this.messages = messages;
+    }
+
+    public BusinessException(final String errorCode, final String title, final Throwable throwable, final List<String> messages) {
+        super(title, throwable);
+        this.errorCode = errorCode;
+        this.title = title;
+        this.messages = messages;
+    }
 }
