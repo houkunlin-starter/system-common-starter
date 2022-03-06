@@ -25,7 +25,7 @@ public class BusinessException extends RuntimeException {
         super(throwable);
         this.errorCode = MessageWrapper.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
         this.title = DEFAULT_TITLE;
-        this.messages = Collections.emptyList();
+        this.messages = Collections.singletonList(throwable.getMessage());
     }
 
     public BusinessException(IErrorModule errorModule) {
@@ -60,7 +60,7 @@ public class BusinessException extends RuntimeException {
         super(cause);
         this.errorCode = errorCode;
         this.title = DEFAULT_TITLE;
-        this.messages = Collections.emptyList();
+        this.messages = Collections.singletonList(cause.getMessage());
     }
 
     public BusinessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String errorCode) {
