@@ -6,6 +6,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * 请求工具类（获取当前请求的IP地址）
@@ -34,6 +35,15 @@ public class RequestUtil {
     }
 
     /**
+     * 获得当前请求对象
+     *
+     * @return 请求对象
+     */
+    public static Optional<HttpServletRequest> getRequestOpt() {
+        return Optional.ofNullable(getRequest());
+    }
+
+    /**
      * 获取当前请求的IP
      *
      * @return IP
@@ -44,6 +54,15 @@ public class RequestUtil {
             return getRequestIp(request);
         }
         return null;
+    }
+
+    /**
+     * 获取当前请求的IP
+     *
+     * @return IP
+     */
+    public static Optional<String> getRequestIpOpt() {
+        return Optional.ofNullable(getRequestIp());
     }
 
     /**
