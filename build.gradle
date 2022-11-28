@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '2.5.4'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "io.freefair.lombok" version "5.3.0"
+    id 'org.springframework.boot' version '3.0.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id "io.freefair.lombok" version "6.5.1"
     id 'maven-publish'
     id 'signing'
     id 'java-library'
@@ -10,8 +10,7 @@ plugins {
 }
 
 group = 'com.houkunlin'
-version = '1.0.3.2'
-sourceCompatibility = '1.8'
+version = '1.1.0'
 
 def gitRepo = "github.com/houkunlin-starter/system-common-starter.git"
 def isSnapshot = findProperty("snapshot") != null || version.endsWith('SNAPSHOT')
@@ -27,9 +26,10 @@ configurations {
 }
 
 repositories {
-    maven { url 'https://maven.aliyun.com/repository/public' }
-    maven { url 'https://repo.spring.io/release' }
+    mavenLocal()
     mavenCentral()
+    // Spring 里程碑仓库
+    maven { url 'https://repo.spring.io/artifactory/libs-milestone/' }
 }
 
 dependencies {
