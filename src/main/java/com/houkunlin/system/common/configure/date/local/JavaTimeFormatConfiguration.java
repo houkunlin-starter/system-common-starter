@@ -1,5 +1,6 @@
 package com.houkunlin.system.common.configure.date.local;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
-import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -92,6 +92,8 @@ public class JavaTimeFormatConfiguration {
 
     @PostConstruct
     public void post() {
-        logger.debug("自动配置本地日期对象转换配置");
+        if (logger.isDebugEnabled()) {
+            logger.debug("自动配置本地日期对象转换配置");
+        }
     }
 }

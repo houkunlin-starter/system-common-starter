@@ -5,7 +5,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
@@ -27,8 +27,7 @@ public class RequestUtil {
      */
     public static HttpServletRequest getRequest() {
         final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes instanceof ServletRequestAttributes) {
-            final ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
+        if (requestAttributes instanceof final ServletRequestAttributes servletRequestAttributes) {
             return servletRequestAttributes.getRequest();
         }
         return null;

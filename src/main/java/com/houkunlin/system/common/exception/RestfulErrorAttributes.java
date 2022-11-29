@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,9 +24,9 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
  *
  * @author HouKunLin
  * @see BasicErrorController
- * @see BasicErrorController#errorHtml(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
- * @see BasicErrorController#error(javax.servlet.http.HttpServletRequest)
- * @see AbstractErrorController#getErrorAttributes(javax.servlet.http.HttpServletRequest, org.springframework.boot.web.error.ErrorAttributeOptions)
+ * @see BasicErrorController#errorHtml(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse)
+ * @see BasicErrorController#error(jakarta.servlet.http.HttpServletRequest)
+ * @see AbstractErrorController#getErrorAttributes(jakarta.servlet.http.HttpServletRequest, org.springframework.boot.web.error.ErrorAttributeOptions)
  * @see DefaultErrorAttributes
  * @since 1.0.2
  */
@@ -41,7 +41,7 @@ public class RestfulErrorAttributes implements ErrorAttributes {
      * @param webRequest 当前的web请求
      * @param options
      * @return
-     * @see AbstractErrorController#getErrorAttributes(javax.servlet.http.HttpServletRequest, org.springframework.boot.web.error.ErrorAttributeOptions)
+     * @see AbstractErrorController#getErrorAttributes(jakarta.servlet.http.HttpServletRequest, org.springframework.boot.web.error.ErrorAttributeOptions)
      */
     @Override
     public Map<String, Object> getErrorAttributes(final WebRequest webRequest, final ErrorAttributeOptions options) {
@@ -100,7 +100,7 @@ public class RestfulErrorAttributes implements ErrorAttributes {
      *
      * @param requestAttributes 请求属性
      * @return HTTP状态码
-     * @see AbstractErrorController#getStatus(javax.servlet.http.HttpServletRequest)
+     * @see AbstractErrorController#getStatus(jakarta.servlet.http.HttpServletRequest)
      */
     protected HttpStatus getStatus(RequestAttributes requestAttributes) {
         Integer statusCode = getAttribute(requestAttributes, RequestDispatcher.ERROR_STATUS_CODE);

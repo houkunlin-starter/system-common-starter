@@ -1,6 +1,7 @@
 package com.houkunlin.system.common.configure.date.joda;
 
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import jakarta.annotation.PostConstruct;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.slf4j.Logger;
@@ -14,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 
@@ -91,6 +91,8 @@ public class JodaTimeFormatConfiguration {
 
     @PostConstruct
     public void post() {
-        logger.debug("自动配置 joda 日期对象转换配置");
+        if (logger.isDebugEnabled()) {
+            logger.debug("自动配置 joda 日期对象转换配置");
+        }
     }
 }

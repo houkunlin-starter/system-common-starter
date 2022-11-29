@@ -2,6 +2,7 @@ package com.houkunlin.system.common.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.houkunlin.system.common.MessageWrapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -121,7 +122,7 @@ public class GlobalRestControllerExceptionHandler {
         message.add(String.format("URI不支持 %s 请求", e.getMethod()));
         Set<HttpMethod> supportedHttpMethods = e.getSupportedHttpMethods();
         if (supportedHttpMethods != null) {
-            String supportedMethods = supportedHttpMethods.stream().map(Enum::name).collect(Collectors.joining("/"));
+            String supportedMethods = supportedHttpMethods.stream().map(HttpMethod::name).collect(Collectors.joining("/"));
             message.add(String.format("该URI可能支持 %s 请求", supportedMethods));
         }
         return new MessageWrapper("B" + HttpStatus.METHOD_NOT_ALLOWED.value(), "HTTP 请求方法不支持", message);
@@ -156,8 +157,7 @@ public class GlobalRestControllerExceptionHandler {
             // 自定义JSON反序列化器时，如果遇到解析异常则会执行到这里
             final HttpStatus status = HttpStatus.BAD_REQUEST;
             final Throwable throwable = cause.getCause();
-            if (throwable instanceof BusinessException) {
-                final BusinessException businessException = (BusinessException) throwable;
+            if (throwable instanceof final BusinessException businessException) {
                 final MessageWrapper wrapper = new MessageWrapper(businessException.getErrorCode(), businessException.getTitle(), businessException.getMessages());
                 return new ResponseEntity<>(wrapper, status);
             }
@@ -179,7 +179,9 @@ public class GlobalRestControllerExceptionHandler {
     public Object bindException(BindException e) {
         logger.error("请求参数数据校验不通过", e);
         final List<String> messages = e.getAllErrors()
-                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
+                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .filter(StringUtils::hasText)
+                .toList();
         return new MessageWrapper("A" + HttpStatus.BAD_REQUEST.value(), "请求参数数据校验不通过", messages);
     }
 }
