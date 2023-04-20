@@ -74,11 +74,14 @@ public class GlobalRestControllerExceptionHandler {
      * @param e 错误
      * @return json
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BusinessException.class)
-    public ErrorMessage businessException(BusinessException e) {
+    public ResponseEntity<ErrorMessage> businessException(BusinessException e) {
         logger.error("业务异常", e);
-        return e.toErrorMessage();
+        HttpStatus httpStatus = e.getHttpStatus();
+        if (httpStatus == null) {
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        return new ResponseEntity<>(e.toErrorMessage(), httpStatus);
     }
 
     /**

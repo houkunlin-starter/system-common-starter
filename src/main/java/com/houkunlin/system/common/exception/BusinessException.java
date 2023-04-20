@@ -3,9 +3,11 @@ package com.houkunlin.system.common.exception;
 import com.houkunlin.system.common.ErrorMessage;
 import com.houkunlin.system.common.IErrorMessage;
 import com.houkunlin.system.common.StackUtil;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
 
@@ -17,6 +19,7 @@ import java.util.Collections;
 @Accessors(chain = true)
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class BusinessException extends RuntimeException implements IErrorMessage {
     public static final String DEFAULT_TITLE = "Oops! 遇到了一个错误！";
     /**
@@ -36,6 +39,10 @@ public class BusinessException extends RuntimeException implements IErrorMessage
      * 其他错误相关消息
      */
     private Object data;
+    /**
+     * 返回的 HTTP 状态码
+     */
+    private HttpStatus httpStatus;
 
     public BusinessException(IErrorMessage errorMessage) {
         super(errorMessage.getMessage());
