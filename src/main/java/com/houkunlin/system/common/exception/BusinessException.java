@@ -44,6 +44,17 @@ public class BusinessException extends RuntimeException implements IErrorMessage
         this.data = errorMessage.getData();
     }
 
+    public BusinessException(IErrorMessage errorMessage, Object... messageArgs) {
+        super(errorMessage.getMessage());
+        this.code = errorMessage.getCode();
+        if (messageArgs == null || messageArgs.length == 0) {
+            this.message = errorMessage.getMessage();
+        } else {
+            this.message = errorMessage.getMessage(messageArgs);
+        }
+        this.data = errorMessage.getData();
+    }
+
     public BusinessException(Throwable throwable) {
         super(throwable);
         this.code = ErrorMessage.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
@@ -55,6 +66,17 @@ public class BusinessException extends RuntimeException implements IErrorMessage
         super(errorMessage.getMessage(), throwable);
         this.code = errorMessage.getCode();
         this.message = errorMessage.getMessage();
+        this.data = errorMessage.getData();
+    }
+
+    public BusinessException(IErrorMessage errorMessage, Throwable throwable, Object... messageArgs) {
+        super(errorMessage.getMessage(), throwable);
+        this.code = errorMessage.getCode();
+        if (messageArgs == null || messageArgs.length == 0) {
+            this.message = errorMessage.getMessage();
+        } else {
+            this.message = errorMessage.getMessage(messageArgs);
+        }
         this.data = errorMessage.getData();
     }
 

@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.houkunlin'
-version = '1.2.0'
+version = '1.2.1'
 
 def gitRepo = "github.com/houkunlin-starter/system-common-starter.git"
 def isSnapshot = findProperty("snapshot") != null || version.endsWith('SNAPSHOT')
