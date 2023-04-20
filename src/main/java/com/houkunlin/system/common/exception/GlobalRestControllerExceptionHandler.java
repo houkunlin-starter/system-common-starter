@@ -77,9 +77,12 @@ public class GlobalRestControllerExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorMessage> businessException(BusinessException e) {
         logger.error("业务异常", e);
-        HttpStatus httpStatus = e.getHttpStatus();
-        if (httpStatus == null) {
+        HttpStatus httpStatus;
+        int statusCode = e.httpStatusCode();
+        if (statusCode <= 0) {
             httpStatus = HttpStatus.BAD_REQUEST;
+        } else {
+            httpStatus = HttpStatus.valueOf(statusCode);
         }
         return new ResponseEntity<>(e.toErrorMessage(), httpStatus);
     }

@@ -22,6 +22,15 @@ public interface IErrorMessage {
     String getMessage();
 
     /**
+     * 获取 HTTP 状态码
+     *
+     * @return 状态码
+     */
+    default int httpStatusCode() {
+        return -1;
+    }
+
+    /**
      * 错误信息
      *
      * @param args 格式化消息文本参数值

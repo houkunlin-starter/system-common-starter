@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
 
@@ -40,15 +39,16 @@ public class BusinessException extends RuntimeException implements IErrorMessage
      */
     private Object data;
     /**
-     * 返回的 HTTP 状态码
+     * 设置返回的 HTTP 状态码，未设置此值时默认为 400 HttpStatus.BAD_REQUEST
      */
-    private HttpStatus httpStatus;
+    private int httpStatusCode = -1;
 
     public BusinessException(IErrorMessage errorMessage) {
         super(errorMessage.getMessage());
         this.code = errorMessage.getCode();
         this.message = errorMessage.getMessage();
         this.data = errorMessage.getData();
+        this.httpStatusCode = errorMessage.httpStatusCode();
     }
 
     public BusinessException(IErrorMessage errorMessage, Object... messageArgs) {
@@ -60,6 +60,7 @@ public class BusinessException extends RuntimeException implements IErrorMessage
             this.message = errorMessage.getMessage(messageArgs);
         }
         this.data = errorMessage.getData();
+        this.httpStatusCode = errorMessage.httpStatusCode();
     }
 
     public BusinessException(Throwable throwable) {
@@ -74,6 +75,7 @@ public class BusinessException extends RuntimeException implements IErrorMessage
         this.code = errorMessage.getCode();
         this.message = errorMessage.getMessage();
         this.data = errorMessage.getData();
+        this.httpStatusCode = errorMessage.httpStatusCode();
     }
 
     public BusinessException(IErrorMessage errorMessage, Throwable throwable, Object... messageArgs) {
@@ -85,6 +87,7 @@ public class BusinessException extends RuntimeException implements IErrorMessage
             this.message = errorMessage.getMessage(messageArgs);
         }
         this.data = errorMessage.getData();
+        this.httpStatusCode = errorMessage.httpStatusCode();
     }
 
     public BusinessException(String message) {
