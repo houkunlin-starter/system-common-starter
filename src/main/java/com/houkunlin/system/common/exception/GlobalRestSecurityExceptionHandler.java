@@ -1,6 +1,7 @@
 package com.houkunlin.system.common.exception;
 
-import com.houkunlin.system.common.MessageWrapper;
+import com.houkunlin.system.common.GlobalErrorMessage;
+import com.houkunlin.system.common.IErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -12,8 +13,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Collections;
 
 /**
  * 捕获 Spring Security 的异常
@@ -36,7 +35,10 @@ public class GlobalRestSecurityExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public Object authenticationException(AuthenticationException e) {
         logger.error("权限相关错误", e);
-        return new MessageWrapper("B" + HttpStatus.UNAUTHORIZED.value(), "权限认证错误，未授权", Collections.singletonList(e.getMessage()));
+        if (e instanceof IErrorMessage errorMessage) {
+            return errorMessage.toErrorMessage();
+        }
+        return GlobalErrorMessage.UNAUTHORIZED.toErrorMessage();
     }
 
     /**
@@ -49,6 +51,9 @@ public class GlobalRestSecurityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public Object authenticationException(AccessDeniedException e) {
         logger.error("拒绝访问异常", e);
-        return new MessageWrapper("B" + HttpStatus.FORBIDDEN.value(), "权限认证错误，拒绝访问资源", Collections.singletonList(e.getMessage()));
+        if (e instanceof IErrorMessage errorMessage) {
+            return errorMessage.toErrorMessage();
+        }
+        return GlobalErrorMessage.FORBIDDEN.toErrorMessage();
     }
 }

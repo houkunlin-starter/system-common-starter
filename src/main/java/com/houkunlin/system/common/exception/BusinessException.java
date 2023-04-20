@@ -1,121 +1,74 @@
 package com.houkunlin.system.common.exception;
 
-import com.houkunlin.system.common.IErrorModule;
-import com.houkunlin.system.common.MessageWrapper;
+import com.houkunlin.system.common.ErrorMessage;
+import com.houkunlin.system.common.IErrorMessage;
 import com.houkunlin.system.common.StackUtil;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * 业务异常对象。
  *
  * @author HouKunLin
  */
+@Accessors(chain = true)
+@Setter
 @Getter
-public class BusinessException extends RuntimeException {
-    public static final String DEFAULT_TITLE = "业务错误";
-    private final String errorCode;
-    private final String title;
-    private final List<String> messages;
+public class BusinessException extends RuntimeException implements IErrorMessage {
+    public static final String DEFAULT_TITLE = "Oops! 遇到了一个错误！";
+    /**
+     * 业务错误代码。参考《阿里巴巴Java开发手册》，每个错误对应一个错误代码
+     * 规则：一位错误生产来源+四位数字编号。
+     * 错误生产来源：
+     * A：错误来源于用户
+     * B：错误来源于当前系统
+     * C：错误来源于第三方服务
+     */
+    private final String code;
+    /**
+     * 业务错误提示，详细的错误提示内容。
+     */
+    private final String message;
+    /**
+     * 其他错误相关消息
+     */
+    private Object data;
+
+    public BusinessException(IErrorMessage errorMessage) {
+        super(errorMessage.getMessage());
+        this.code = errorMessage.getCode();
+        this.message = errorMessage.getMessage();
+        this.data = errorMessage.getData();
+    }
 
     public BusinessException(Throwable throwable) {
         super(throwable);
-        this.errorCode = MessageWrapper.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(throwable.getMessage());
+        this.code = ErrorMessage.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
+        this.message = DEFAULT_TITLE;
+        this.data = Collections.singletonList(throwable.getMessage());
     }
 
-    public BusinessException(IErrorModule errorModule) {
-        super(errorModule.getMessage());
-        this.errorCode = errorModule.getErrorCode();
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(errorModule.getMessage());
+    public BusinessException(IErrorMessage errorMessage, Throwable throwable) {
+        super(errorMessage.getMessage(), throwable);
+        this.code = errorMessage.getCode();
+        this.message = errorMessage.getMessage();
+        this.data = errorMessage.getData();
     }
 
     public BusinessException(String message) {
         super(message);
-        this.errorCode = MessageWrapper.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(message);
-    }
-
-    public BusinessException(String message, String errorCode) {
-        super(message);
-        this.errorCode = errorCode;
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(message);
-    }
-
-    public BusinessException(String message, Throwable cause, String errorCode) {
-        super(message, cause);
-        this.errorCode = errorCode;
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(message);
-    }
-
-    public BusinessException(Throwable cause, String errorCode) {
-        super(cause);
-        this.errorCode = errorCode;
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(cause.getMessage());
-    }
-
-    public BusinessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String errorCode) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.errorCode = errorCode;
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(message);
+        this.code = ErrorMessage.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
+        this.message = message;
+        this.data = null;
     }
 
     public BusinessException(String message, Throwable throwable) {
         super(message, throwable);
-        this.errorCode = MessageWrapper.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
-        this.title = DEFAULT_TITLE;
-        this.messages = Collections.singletonList(message);
-    }
-
-    public BusinessException(final String title, final String... messages) {
-        super(title);
-        this.errorCode = MessageWrapper.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
-        this.title = title;
-        this.messages = Arrays.asList(messages);
-    }
-
-    public BusinessException(final String errorCode, final String title, final String... messages) {
-        super(title);
-        this.errorCode = errorCode;
-        this.title = title;
-        this.messages = Arrays.asList(messages);
-    }
-
-    public BusinessException(final String errorCode, final String title, final Throwable throwable, final String... messages) {
-        super(title, throwable);
-        this.errorCode = errorCode;
-        this.title = title;
-        this.messages = Arrays.asList(messages);
-    }
-
-    public BusinessException(final String title, final List<String> messages) {
-        super(title);
-        this.errorCode = MessageWrapper.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
-        this.title = title;
-        this.messages = messages;
-    }
-
-    public BusinessException(final String errorCode, final String title, final List<String> messages) {
-        super(title);
-        this.errorCode = errorCode;
-        this.title = title;
-        this.messages = messages;
-    }
-
-    public BusinessException(final String errorCode, final String title, final Throwable throwable, final List<String> messages) {
-        super(title, throwable);
-        this.errorCode = errorCode;
-        this.title = title;
-        this.messages = messages;
+        this.code = ErrorMessage.buildErrorCode(StackUtil.getParentStackTraceElement(BusinessException.class));
+        this.message = message;
+        this.data = null;
     }
 }

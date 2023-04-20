@@ -1,5 +1,8 @@
 package com.houkunlin.system.common.exception;
 
+import com.houkunlin.system.common.IErrorMessage;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
@@ -12,8 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,8 +40,8 @@ public class RestfulErrorAttributes implements ErrorAttributes {
      * 获取错误属性信息
      *
      * @param webRequest 当前的web请求
-     * @param options
-     * @return
+     * @param options    错误属性参数
+     * @return 错误信息
      * @see AbstractErrorController#getErrorAttributes(jakarta.servlet.http.HttpServletRequest, org.springframework.boot.web.error.ErrorAttributeOptions)
      */
     @Override
@@ -48,17 +49,28 @@ public class RestfulErrorAttributes implements ErrorAttributes {
         Map<String, Object> errorAttributes = new LinkedHashMap<>();
         Throwable error = getError(webRequest);
         if (error != null) {
+            if (error instanceof IErrorMessage errorMessage) {
+                return putError(errorAttributes, errorMessage.getCode(), errorMessage.getMessage(), errorMessage.getData());
+            }
             while (error instanceof ServletException && error.getCause() != null) {
                 error = error.getCause();
+                if (error instanceof IErrorMessage errorMessage) {
+                    return putError(errorAttributes, errorMessage.getCode(), errorMessage.getMessage(), errorMessage.getData());
+                }
             }
-            errorAttributes.put("code", "A500");
-            errorAttributes.put("msg", error.getMessage());
+            putError(errorAttributes, "A500", error.getMessage(), null);
         } else {
             final HttpStatus status = getStatus(webRequest);
-            errorAttributes.put("code", "A" + status.value());
-            errorAttributes.put("msg", "请求资源错误，请检查是否存在资源");
+            putError(errorAttributes, "A" + status.value(), "请求资源错误，请检查是否存在资源", null);
         }
 
+        return errorAttributes;
+    }
+
+    public Map<String, Object> putError(Map<String, Object> errorAttributes, String code, String message, Object data) {
+        errorAttributes.put("code", code);
+        errorAttributes.put("message", message);
+        errorAttributes.put("data", data);
         return errorAttributes;
     }
 
