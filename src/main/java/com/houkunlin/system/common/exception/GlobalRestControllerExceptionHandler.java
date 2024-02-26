@@ -1,6 +1,7 @@
 package com.houkunlin.system.common.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.houkunlin.system.common.BindFieldErrorMessage;
 import com.houkunlin.system.common.ErrorMessage;
 import com.houkunlin.system.common.GlobalErrorMessage;
 import com.houkunlin.system.common.IErrorMessage;
@@ -8,13 +9,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -172,9 +173,9 @@ public class GlobalRestControllerExceptionHandler {
             return new ResponseEntity<>(errorMessage.toErrorMessage(), HttpStatus.BAD_REQUEST);
         }
         final Throwable cause = e.getCause();
-        if (cause instanceof JsonMappingException) {
+        if (cause instanceof JsonMappingException jsonMappingException) {
             // 自定义JSON反序列化器时，如果遇到解析异常则会执行到这里
-            final Throwable throwable = cause.getCause();
+            final Throwable throwable = jsonMappingException.getCause();
             if (throwable instanceof IErrorMessage errorMessage) {
                 return new ResponseEntity<>(errorMessage.toErrorMessage(), HttpStatus.BAD_REQUEST);
             }
@@ -199,9 +200,18 @@ public class GlobalRestControllerExceptionHandler {
         if (e instanceof IErrorMessage errorMessage) {
             return errorMessage.toErrorMessage();
         }
-        final List<String> messages = e.getAllErrors()
-                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .filter(StringUtils::hasText)
+        final List<BindFieldErrorMessage> messages = e.getAllErrors()
+                .stream()
+                .map(objectError -> {
+                    BindFieldErrorMessage.BindFieldErrorMessageBuilder builder = BindFieldErrorMessage.builder();
+                    builder.objectName(objectError.getObjectName());
+                    builder.message(objectError.getDefaultMessage());
+                    if (objectError instanceof FieldError fieldError) {
+                        builder.fieldName(fieldError.getField());
+                        builder.fieldValue(fieldError.getRejectedValue());
+                    }
+                    return builder.build();
+                })
                 .toList();
         return GlobalErrorMessage.METHOD_BIND.toErrorMessage().setData(messages);
     }
