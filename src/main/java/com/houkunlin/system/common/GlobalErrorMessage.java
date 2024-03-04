@@ -8,7 +8,7 @@ import lombok.Getter;
  * @author HouKunLin
  */
 @Getter
-public enum GlobalErrorMessage implements IErrorMessage {
+public enum GlobalErrorMessage implements IErrorMessage, IErrorMessageToException {
     /**
      * 默认错误
      */
