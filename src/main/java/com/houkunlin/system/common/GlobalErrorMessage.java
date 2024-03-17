@@ -49,8 +49,15 @@ public enum GlobalErrorMessage implements IErrorMessage, IErrorMessageToExceptio
      * 拒绝访问异常
      */
     FORBIDDEN("B403", "权限认证错误，拒绝访问资源"),
+    /**
+     * 请求参数数据校验不通过
+     */
+    PATH_VARIABLE("A500", "路径参数解析错误，缺少路径变量"),
+    /**
+     * 请求不满足的参数条件
+     */
+    UNSATISFIED_REQUEST_PARAMETER("A500", "请求缺少参数，或不满足参数条件"),
     ;
-
 
     private final String code;
     private final String message;

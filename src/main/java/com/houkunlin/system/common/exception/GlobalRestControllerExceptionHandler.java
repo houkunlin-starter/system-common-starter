@@ -15,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -214,5 +215,38 @@ public class GlobalRestControllerExceptionHandler {
                 })
                 .toList();
         return GlobalErrorMessage.METHOD_BIND.toErrorMessage().setData(messages);
+    }
+
+    /**
+     * 路径参数绑定错误，缺少路径变量
+     *
+     * @param e 错误
+     * @return json
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({MissingPathVariableException.class})
+    public ErrorMessage missingPathVariableException(MissingPathVariableException e) {
+        logger.error("路径参数解析错误，缺少路径变量", e);
+        if (e instanceof IErrorMessage errorMessage) {
+            return errorMessage.toErrorMessage();
+        }
+        return GlobalErrorMessage.PATH_VARIABLE.toErrorMessage().setData(List.of(e.getVariableName()));
+    }
+
+    /**
+     * 请求缺少参数，或不满足参数条件
+     *
+     * @param e 错误
+     * @return json
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({UnsatisfiedServletRequestParameterException.class})
+    public ErrorMessage unsatisfiedServletRequestParameterException(UnsatisfiedServletRequestParameterException e) {
+        logger.error("请求缺少参数，或不满足参数条件", e);
+        if (e instanceof IErrorMessage errorMessage) {
+            return errorMessage.toErrorMessage();
+        }
+        String[] paramConditions = e.getParamConditions();
+        return GlobalErrorMessage.UNSATISFIED_REQUEST_PARAMETER.toErrorMessage().setData(paramConditions);
     }
 }
