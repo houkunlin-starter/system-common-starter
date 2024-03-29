@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
  * @author HouKunLin
  */
 public class JavaTimeModule extends SimpleModule {
-    private static final Version VERSION = VersionUtil.parseVersion("0.0.1", "com.houkunlin", "system-common-starter");
+    private static final Version VERSION = VersionUtil.parseVersion("0.0.2", "com.houkunlin", "system-common-starter-java-time-module");
 
     public JavaTimeModule(
             @Qualifier("dateTimeDateTimeFormatter") DateTimeFormatter dateTimeDateTimeFormatter,
@@ -37,10 +37,5 @@ public class JavaTimeModule extends SimpleModule {
         addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(dateTimeDateTimeFormatter));
         addDeserializer(LocalDate.class, new LocalDateDeserializer(dateDateTimeFormatter));
         addDeserializer(LocalTime.class, new LocalTimeDeserializer(timeDateTimeFormatter));
-    }
-
-    @Override
-    public String getModuleName() {
-        return getClass().getSimpleName();
     }
 }

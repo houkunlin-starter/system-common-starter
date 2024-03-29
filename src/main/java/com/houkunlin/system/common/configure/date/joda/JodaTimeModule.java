@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class JodaTimeModule extends SimpleModule {
     private static final Logger logger = LoggerFactory.getLogger(JodaTimeModule.class);
-    private static final Version VERSION = VersionUtil.parseVersion("0.0.1", "com.houkunlin", "system-common-starter");
+    private static final Version VERSION = VersionUtil.parseVersion("0.0.2", "com.houkunlin", "system-common-starter-joda-time-module");
 
     public JodaTimeModule(
             @Qualifier("dateTimeJodaDateTimeFormatter") DateTimeFormatter dateTimeJodaDateTimeFormatter,
@@ -77,10 +77,5 @@ public class JodaTimeModule extends SimpleModule {
                 return localTimeDeserializer.deserialize(p, ctxt).toDateTime(dateTime);
             }
         });
-    }
-
-    @Override
-    public String getModuleName() {
-        return getClass().getSimpleName();
     }
 }
