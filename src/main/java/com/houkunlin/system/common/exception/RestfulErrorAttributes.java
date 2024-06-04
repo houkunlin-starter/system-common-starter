@@ -34,6 +34,7 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
 @Component
 @ConditionalOnProperty(prefix = "system.common.error", name = "to-json", matchIfMissing = true)
 public class RestfulErrorAttributes implements ErrorAttributes {
+    private static final String ERROR_ATTRIBUTE = ErrorAttributes.class.getName() + ".error";
     private static final String ERROR_INTERNAL_ATTRIBUTE = DefaultErrorAttributes.class.getName() + ".ERROR";
 
     /**
@@ -89,7 +90,7 @@ public class RestfulErrorAttributes implements ErrorAttributes {
         }
         // store the exception in a well-known attribute to make it available to metrics
         // instrumentation.
-        webRequest.setAttribute(ErrorAttributes.ERROR_ATTRIBUTE, exception, SCOPE_REQUEST);
+        webRequest.setAttribute(ERROR_ATTRIBUTE, exception, SCOPE_REQUEST);
         return exception;
     }
 
