@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -153,6 +154,22 @@ public class GlobalRestControllerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({NoHandlerFoundException.class})
     public ErrorMessage noHandlerFoundException(NoHandlerFoundException e) {
+        logger.error("404错误", e);
+        if (e instanceof IErrorMessage errorMessage) {
+            return errorMessage.toErrorMessage();
+        }
+        return GlobalErrorMessage.NOT_FOUND.toErrorMessage();
+    }
+
+    /**
+     * 找不到静态资源
+     *
+     * @param e 错误
+     * @return json
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NoResourceFoundException.class})
+    public ErrorMessage noResourceFoundException(NoResourceFoundException e) {
         logger.error("404错误", e);
         if (e instanceof IErrorMessage errorMessage) {
             return errorMessage.toErrorMessage();
