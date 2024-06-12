@@ -170,7 +170,7 @@ public class GlobalRestControllerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({NoResourceFoundException.class})
     public ErrorMessage noResourceFoundException(NoResourceFoundException e) {
-        logger.error("404错误", e);
+        logger.error("not found static resource: {}", e.getMessage());
         if (e instanceof IErrorMessage errorMessage) {
             return errorMessage.toErrorMessage();
         }
