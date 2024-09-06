@@ -1,6 +1,7 @@
 package com.houkunlin.system.common.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.houkunlin.system.common.BindFieldErrorMessage;
 import com.houkunlin.system.common.ErrorMessage;
 import com.houkunlin.system.common.GlobalErrorMessage;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 全局异常捕获处理程序
@@ -185,8 +187,7 @@ public class GlobalRestControllerExceptionHandler {
      */
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorMessage> httpMessageNotReadableException(HttpMessageNotReadableException e) {
-        logger.error("数据类型转换错误: {}", e.getLocalizedMessage());
-        logger.error("数据类型转换错误", e);
+        logger.error("数据类型转换错误: {}", e.getLocalizedMessage(), e);
         if (e instanceof IErrorMessage errorMessage) {
             return new ResponseEntity<>(errorMessage.toErrorMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -199,6 +200,12 @@ public class GlobalRestControllerExceptionHandler {
             }
 
             final ErrorMessage errorMessage = GlobalErrorMessage.HTTP_MESSAGE_CONVERT_JSON_MAPPING.toErrorMessage();
+            if (jsonMappingException instanceof MismatchedInputException mismatchedInputException) {
+                List<Map<String, String>> mapList = mismatchedInputException.getPath().stream()
+                        .map(reference -> Map.of("fieldName", reference.getFieldName(), "type", mismatchedInputException.getTargetType().getSimpleName()))
+                        .toList();
+                errorMessage.setData(mapList);
+            }
             return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
         }
         final ErrorMessage errorMessage = GlobalErrorMessage.HTTP_MESSAGE_CONVERT.toErrorMessage();
