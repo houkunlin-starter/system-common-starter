@@ -6,8 +6,10 @@ import com.houkunlin.system.common.exception.GlobalRestControllerExceptionHandle
 import com.houkunlin.system.common.exception.GlobalRestSecurityExceptionHandler;
 import com.houkunlin.system.common.exception.RestfulErrorAttributes;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -18,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 /**
  * @author HouKunLin
  */
+@AutoConfiguration(before = ErrorMvcAutoConfiguration.class)
 @Configuration(proxyBeanMethods = false)
 public class SystemCommonConfiguration {
 
