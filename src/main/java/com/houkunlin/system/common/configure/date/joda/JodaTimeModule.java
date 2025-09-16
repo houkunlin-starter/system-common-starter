@@ -19,7 +19,6 @@ import org.joda.time.*;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;
 
@@ -33,9 +32,9 @@ public class JodaTimeModule extends SimpleModule {
     private static final Version VERSION = VersionUtil.parseVersion("0.0.2", "com.houkunlin", "system-common-starter-joda-time-module");
 
     public JodaTimeModule(
-            @Qualifier("dateTimeJodaDateTimeFormatter") DateTimeFormatter dateTimeJodaDateTimeFormatter,
-            @Qualifier("dateJodaDateTimeFormatter") DateTimeFormatter dateJodaDateTimeFormatter,
-            @Qualifier("timeJodaDateTimeFormatter") DateTimeFormatter timeJodaDateTimeFormatter) {
+            DateTimeFormatter dateTimeJodaDateTimeFormatter,
+            DateTimeFormatter dateJodaDateTimeFormatter,
+            DateTimeFormatter timeJodaDateTimeFormatter) {
         super(VERSION);
 
         final JacksonJodaDateFormat jodaDateTimeFormat = new JacksonJodaDateFormat(dateTimeJodaDateTimeFormatter);

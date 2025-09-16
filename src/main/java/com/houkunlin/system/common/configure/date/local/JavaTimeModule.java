@@ -9,7 +9,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,9 +24,9 @@ public class JavaTimeModule extends SimpleModule {
     private static final Version VERSION = VersionUtil.parseVersion("0.0.2", "com.houkunlin", "system-common-starter-java-time-module");
 
     public JavaTimeModule(
-            @Qualifier("dateTimeDateTimeFormatter") DateTimeFormatter dateTimeDateTimeFormatter,
-            @Qualifier("dateDateTimeFormatter") DateTimeFormatter dateDateTimeFormatter,
-            @Qualifier("timeDateTimeFormatter") DateTimeFormatter timeDateTimeFormatter) {
+            DateTimeFormatter dateTimeDateTimeFormatter,
+            DateTimeFormatter dateDateTimeFormatter,
+            DateTimeFormatter timeDateTimeFormatter) {
         super(VERSION);
 
         addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(dateTimeDateTimeFormatter));
