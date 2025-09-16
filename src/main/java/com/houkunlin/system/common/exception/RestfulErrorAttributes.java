@@ -3,7 +3,6 @@ package com.houkunlin.system.common.exception;
 import com.houkunlin.system.common.IErrorMessage;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -11,7 +10,6 @@ import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
@@ -31,8 +29,6 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
  * @see DefaultErrorAttributes
  * @since 1.0.2
  */
-@Component
-@ConditionalOnProperty(prefix = "system.common.error", name = "to-json", matchIfMissing = true)
 public class RestfulErrorAttributes implements ErrorAttributes {
     private static final String ERROR_ATTRIBUTE = ErrorAttributes.class.getName() + ".error";
     private static final String ERROR_INTERNAL_ATTRIBUTE = DefaultErrorAttributes.class.getName() + ".ERROR";

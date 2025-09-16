@@ -24,10 +24,9 @@ import java.util.List;
  * @author HouKunLin
  */
 @ConditionalOnProperty(prefix = "system.common.date", name = "joda.enable", matchIfMissing = true)
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(JodaModule.class)
 public class JodaTimeFormatConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(JodaTimeFormatConfiguration.class);
     /**
      * Date格式化字符串
      */
@@ -87,12 +86,5 @@ public class JodaTimeFormatConfiguration {
             @Qualifier("dateJodaDateTimeFormatter") DateTimeFormatter dateJodaDateTimeFormatter,
             @Qualifier("timeJodaDateTimeFormatter") DateTimeFormatter timeJodaDateTimeFormatter) {
         return new JodaTimeModule(dateTimeJodaDateTimeFormatter, dateJodaDateTimeFormatter, timeJodaDateTimeFormatter);
-    }
-
-    @PostConstruct
-    public void post() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("自动配置 joda 日期对象转换配置");
-        }
     }
 }

@@ -1,1 +1,3 @@
-com.houkunlin.system.common.SystemCommonStarter
+com.houkunlin.system.common.SystemCommonConfiguration
+com.houkunlin.system.common.configure.date.joda.JodaTimeFormatConfiguration
+com.houkunlin.system.common.configure.date.local.JavaTimeFormatConfiguration

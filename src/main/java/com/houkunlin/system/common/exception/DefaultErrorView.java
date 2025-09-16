@@ -22,9 +22,7 @@ import java.util.Map;
  * @see ErrorMvcAutoConfiguration.WhitelabelErrorViewConfiguration#defaultErrorView
  * @since 1.0.2
  */
-@Component("error")
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "system.common.error", name = "to-json", matchIfMissing = true)
 public class DefaultErrorView implements View {
     private static final Logger logger = LoggerFactory.getLogger(DefaultErrorView.class);
     private static final MediaType TEXT_HTML_UTF8 = MediaType.APPLICATION_JSON;
