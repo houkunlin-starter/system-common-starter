@@ -1,3 +1,6 @@
-com.houkunlin.system.common.SystemCommonConfiguration
-com.houkunlin.system.common.configure.date.joda.JodaTimeFormatConfiguration
-com.houkunlin.system.common.configure.date.local.JavaTimeFormatConfiguration
+com.houkunlin.common.SystemCommonConfiguration
+com.houkunlin.common.time.JavaTimeFormatConfiguration
+com.houkunlin.common.SystemCommonAopAutoConfiguration
+com.houkunlin.common.SystemCommonAopPOIAutoConfiguration
+com.houkunlin.common.SystemCommonAopRedisConfiguration
+com.houkunlin.common.aop.ip.AllowIPConfigurationProperties
